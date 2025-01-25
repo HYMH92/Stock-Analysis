@@ -1,10 +1,9 @@
-import requests
-import telepot
 import yfinance as yf
 from datetime import datetime, timedelta
 import pandas as pd
 from tabulate import tabulate
 
+# nasdaq100:
 
 tickers = [
     "ADBE", "AMD", "ABNB", "GOOGL", "GOOG", "AMZN", "AEP", "AMGN", "ADI", "ANSS",
@@ -64,9 +63,7 @@ def get_stock_analysis(tickers):
 
                 if is_rising_150:
                     # Check for "Gold Stock" or "Red Stock" criteria
-                    # Fetch the last 10 days of data
-                    # Check if the SMA_50 crosses the SMA_200 from below or above in the last 10 days
-                    # If so, the stock is considered a "Gold Stock" or "Red Stock" based on the criteria
+
                     recent_data = data.tail(10)
 
                     crossed_gold = (
@@ -86,13 +83,7 @@ def get_stock_analysis(tickers):
 
                     results.append({'Stock': ticker, 'Label': stock_label})
                 
-                #     results.append({
-                #         'Stock': ticker,
-                #         'Current Price': latest_price,
-                #         'SMA_50': latest_sma_50,
-                #         'SMA_150': latest_sma_150,
-                #         'SMA_200': latest_sma_200
-                # })
+
 
         except IndexError:
             print(f"Not enough data for {ticker}. Skipping...")
@@ -103,26 +94,5 @@ def get_stock_analysis(tickers):
 
 result_df = get_stock_analysis(tickers)
 
-
-
-# telegram information:
-
-# the bot token/api key and the bot username
-token = "8020919338:AAF8DYn8He1QJXsb9iGw25POC-JCbHkwxAM"
-# the channel 'Family Stock Tracking' ID
-chat_id = "-1002355725130"
-# the bot username
-BOT_USERNAME = "@FamilyStockTrackingbot"
-
-bot = telepot.Bot(token)
-
- # convert the lists in the 'fruits' column into strings
-all_data = tabulate(result_df, headers='keys', tablefmt='grid')
-
-# this function is handling the act of communicating with telegram and sending the message
-def send_message(text):
-    url_req = "https://api.telegram.org/bot" + token + "/sendMessage" + "?chat_id=" + chat_id + "&text=" + text
-    results = requests.get(url_req)
-
-# send to telegram group
-send_message(all_data)
+# convert the lists in the 'fruits' column into strings
+print(tabulate(result_df, headers='keys', tablefmt='grid'))
